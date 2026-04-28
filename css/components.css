@@ -1,0 +1,403 @@
+/* === COMPONENTS.CSS — Buttons, Cards, Badges, Tags === */
+
+/* ---- BUTTONS ---- */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn:hover::before { opacity: 1; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold-deep), #d4a520);
+  color: var(--white-off);
+  box-shadow: 0 4px 16px rgba(183,126,0,0.25);
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(183,126,0,0.35);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--gold);
+  color: var(--gold);
+}
+.btn-outline:hover {
+  background: var(--gold);
+  color: var(--black);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(202,184,79,0.25);
+}
+
+.btn-dark {
+  background: var(--black);
+  color: var(--gold);
+  border: 2px solid var(--gold);
+}
+.btn-dark:hover {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.btn-sm { padding: 10px 20px; font-size: 0.78rem; }
+.btn-lg { padding: 18px 44px; font-size: 0.95rem; }
+
+/* ---- BADGES ---- */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.badge-fresh { background: rgba(45,106,45,0.15); color: #2d6a2d; border: 1px solid rgba(45,106,45,0.2); }
+.badge-gold  { background: var(--gold); color: var(--black); }
+.badge-dark  { background: var(--black); color: var(--gold); border: 1px solid rgba(202,184,79,0.3); }
+.badge-app   {
+  background: rgba(202,184,79,0.12);
+  color: var(--gold);
+  border: 1px solid rgba(202,184,79,0.3);
+}
+
+/* ---- PRODUCT CARD ---- */
+.product-card {
+  background: var(--white-pure);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(212,201,168,0.5);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  box-shadow: var(--shadow-soft);
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-gold);
+  border-color: var(--gold);
+}
+
+.product-card .card-img {
+  height: 220px;
+  overflow: hidden;
+  background: var(--gold-pale);
+  position: relative;
+}
+
+.product-card .card-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.product-card:hover .card-img img { transform: scale(1.08); }
+
+.product-card .card-badge {
+  position: absolute; top: 14px; left: 14px;
+}
+
+.product-card .card-body {
+  padding: 22px;
+}
+
+.product-card h3 {
+  font-size: 1.15rem;
+  margin: 8px 0 6px;
+  color: var(--black);
+}
+
+.product-card .farmer-name {
+  font-size: 0.82rem;
+  color: var(--gray-text);
+  margin-bottom: 12px;
+}
+
+.product-card .card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gray-subtle);
+}
+
+.product-card .price {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gold-deep);
+}
+
+/* ---- FEATURE CARD ---- */
+.feature-card {
+  background: linear-gradient(145deg, var(--white-pure), var(--white-off));
+  border: 1px solid rgba(202, 184, 79, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  z-index: 1;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle at top right, rgba(202, 184, 79, 0.12), transparent 70%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(183, 126, 0, 0.15);
+  border-color: var(--gold);
+}
+.feature-card:hover::before { opacity: 1; }
+
+.feature-card .icon-wrapper {
+  width: 68px; height: 68px;
+  background: linear-gradient(135deg, var(--gold-pale), rgba(245,232,163,0.6));
+  border-radius: var(--radius-lg);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+  color: var(--gold-deep);
+  box-shadow: inset 0 0 0 1px rgba(202, 184, 79, 0.35), 0 8px 20px rgba(202, 184, 79, 0.15);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.feature-card:hover .icon-wrapper {
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+  color: var(--white-off);
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 12px 24px rgba(183, 126, 0, 0.3);
+}
+
+.feature-card .icon {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.feature-card h3 { font-size: 1.25rem; margin-bottom: 12px; color: var(--black); font-weight: 800; }
+.feature-card p  { font-size: 0.92rem; color: var(--gray-text); line-height: 1.75; }
+
+/* ---- STEP CARD ---- */
+.step-card {
+  text-align: center;
+  padding: 40px 24px;
+  position: relative;
+  border-radius: var(--radius-lg);
+  transition: all 0.4s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-6px);
+}
+
+.step-card:hover .step-number {
+  background: var(--gold);
+  color: var(--black);
+  animation: ringPulse 2s ease-in-out infinite;
+}
+
+.step-number {
+  width: 72px; height: 72px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--gold);
+  position: relative;
+  z-index: 1;
+  transition: all 0.4s ease;
+  background: transparent;
+}
+
+.step-card .icon {
+  font-size: 2.8rem;
+  margin-bottom: 18px;
+  display: block;
+}
+
+.step-card::after {
+  content: '';
+  position: absolute; top: 68px; left: 60%;
+  width: 80%; height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  z-index: 0;
+  opacity: 0.5;
+}
+.step-card:last-child::after { display: none; }
+
+/* ---- FARMER PROFILE CARD ---- */
+.farmer-card {
+  background: var(--white-pure);
+  border: 1px solid rgba(212,201,168,0.5);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: var(--shadow-soft);
+}
+
+.farmer-card:hover {
+  border-color: var(--gold);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-8px);
+}
+
+.farmer-card .avatar {
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-pale), rgba(245,232,163,0.5));
+  border: 3px solid var(--gold);
+  margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(202,184,79,0.2);
+  transition: all 0.3s ease;
+}
+
+.farmer-card:hover .avatar {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(202,184,79,0.3);
+}
+
+.farmer-card .avatar img { width: 100%; height: 100%; object-fit: cover; }
+.farmer-card h3 { font-size: 1.1rem; margin-bottom: 4px; }
+.farmer-card .location { font-size: 0.82rem; color: var(--gray-text); margin-bottom: 12px; }
+.farmer-card .crops {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  justify-content: center; margin-top: 12px;
+}
+.farmer-card .crop-tag {
+  background: rgba(245,232,163,0.5);
+  color: var(--brown);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid rgba(202,184,79,0.25);
+}
+
+/* ---- COMING SOON STRIP ---- */
+.coming-soon-strip {
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold), var(--gold-deep));
+  background-size: 200% auto;
+  animation: shimmer 6s linear infinite;
+  padding: 22px 5%;
+  display: flex; align-items: center; justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.coming-soon-strip span {
+  color: var(--black);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.coming-soon-strip .badge-app {
+  background: rgba(0,0,0,0.15);
+  color: var(--black);
+  border-color: rgba(0,0,0,0.2);
+}
+
+/* ---- STATS BAR ---- */
+.stats-bar {
+  background: var(--black);
+  padding: 50px 5%;
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-bar::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 80% at 50% 100%, rgba(202,184,79,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: center;
+  position: relative;
+}
+
+.stat-item {
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  background: rgba(202,184,79,0.06);
+}
+
+.stat-item .stat-num {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--gold);
+  display: block;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.stat-item .stat-label {
+  font-size: 0.8rem;
+  color: rgba(212,201,168,0.7);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* ---- GRID LAYOUTS ---- */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+.grid-6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+
+/* ---- RESPONSIVE GRIDS ---- */
+@media (max-width: 1024px) {
+  .grid-4  { grid-template-columns: repeat(2, 1fr); }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4, .grid-6 { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .step-card::after { display: none; }
+}

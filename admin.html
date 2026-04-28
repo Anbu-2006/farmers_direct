@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — Farmer's Direct</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <script src="js/api.js"></script>
+  <script>
+    if (!Auth.isLoggedIn() || !Auth.isRole('admin')) {
+      window.location.href = 'admin-login.html';
+    }
+    function logout() {
+      Auth.clear();
+      window.location.href = 'admin-login.html';
+    }
+  </script>
+  <style>
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 0;
+      min-height: calc(100vh - 70px - 42px);
+    }
+
+    /* Sidebar */
+    .dash-sidebar {
+      background: var(--black);
+      padding: 32px 20px;
+      border-right: 1px solid rgba(202,184,79,0.15);
+    }
+
+    .admin-profile {
+      text-align: center;
+      padding: 20px 0 28px;
+      border-bottom: 1px solid rgba(202,184,79,0.15);
+      margin-bottom: 24px;
+    }
+
+    .admin-profile .avatar {
+      width: 72px; height: 72px;
+      background: var(--gold-deep);
+      color: var(--white-off);
+      border: 3px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 12px;
+    }
+
+    .admin-profile h3 { color: var(--white-off); font-size: 1rem; }
+    .admin-profile p  { color: rgba(250,247,238,0.5); font-size: 0.8rem; margin-top: 4px; }
+
+    .dash-nav { display: flex; flex-direction: column; gap: 4px; }
+
+    .dash-nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      color: rgba(250,247,238,0.55);
+      font-size: 0.88rem; font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .dash-nav-item:hover, .dash-nav-item.active {
+      background: rgba(202,184,79,0.1);
+      color: var(--gold);
+    }
+
+    .dash-nav-item .icon { font-size: 1.1rem; width: 24px; text-align: center; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--gold-deep);
+      color: var(--white-off);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+    }
+
+    /* Main Content */
+    .dash-main {
+      background: #f4f0e4;
+      padding: 36px 40px;
+    }
+
+    .dash-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 32px; flex-wrap: wrap; gap: 12px;
+    }
+
+    .dash-header h2 { font-size: 1.5rem; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 18px;
+      margin-bottom: 36px;
+    }
+
+    .stat-card {
+      background: var(--white-off);
+      border: 1px solid var(--gray-warm);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      transition: all var(--transition);
+    }
+
+    .stat-card:hover { border-color: var(--gold); transform: translateY(-3px); }
+    .stat-card .s-label { font-size: 0.72rem; color: #777; letter-spacing: 0.1em; text-transform: uppercase; }
+    .stat-card .s-val  { font-family: var(--font-display); font-size: 1.7rem; font-weight: 900; color: var(--gold-deep); margin-top: 4px; }
+    .stat-card .s-sub  { font-size: 0.75rem; color: #d35400; margin-top: 4px; }
+    .stat-card.good .s-sub { color: #2d6a2d; }
+
+    /* Tables / Sections */
+    .admin-section {
+      background: var(--white-off);
+      border: 1px solid var(--gray-warm);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 32px;
+    }
+
+    .admin-section h3 { margin-bottom: 20px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    table th { padding: 12px 16px; border-bottom: 2px solid var(--gold-pale); font-size: 0.8rem; color: #777; text-transform: uppercase; letter-spacing: 0.05em; }
+    table td { padding: 16px; border-bottom: 1px solid var(--gray-warm); font-size: 0.9rem; color: var(--black); vertical-align: middle; }
+    .action-btns { display: flex; gap: 8px; }
+
+    @media (max-width: 1024px) {
+      .dashboard-layout { grid-template-columns: 1fr; }
+      .dash-sidebar { display: none; }
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 640px) {
+      .dash-main { padding: 20px 16px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      table, thead, tbody, th, td, tr { display: block; }
+      table th { display: none; }
+      table td { position: relative; padding-left: 50%; border-bottom: 1px solid #eee; }
+      table td:before { position: absolute; top: 16px; left: 16px; width: 45%; padding-right: 10px; white-space: nowrap; font-weight: bold; font-size: 0.8rem; color: #777; content: attr(data-label); }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text">Farmer's<span>Direct</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="farmer.html">For Farmers</a></li>
+    <li><a href="consumer.html">Marketplace</a></li>
+    <li><a href="admin-login.html" class="active">Admin</a></li>
+    <li><a href="farmer.html" class="nav-cta">Join Now</a></li>
+  </ul>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="prototype-banner">⚠️ System Administrator Dashboard — Secure Area</div>
+
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <aside class="dash-sidebar">
+    <div class="admin-profile">
+      <div class="avatar">🛡️</div>
+      <h3>Super Admin</h3>
+      <p>Platform Operations</p>
+    </div>
+    <nav class="dash-nav">
+      <div class="dash-nav-item active" onclick="switchTab('tab-overview', this)"><span class="icon">📊</span> Overview</div>
+      <div class="dash-nav-item" onclick="switchTab('tab-verifications', this)"><span class="icon">🧑‍🌾</span> Verify Farmers <span class="nav-badge" id="badge-verifications">0</span></div>
+      <div class="dash-nav-item" onclick="switchTab('tab-orders', this)"><span class="icon">📦</span> Live Orders <span class="nav-badge" id="badge-orders">0</span></div>
+      <div class="dash-nav-item" onclick="switchTab('tab-disputes', this)"><span class="icon">⚖️</span> Disputes <span class="nav-badge" style="background:#c0392b;" id="badge-disputes">0</span></div>
+      <div class="dash-nav-item" onclick="switchTab('tab-payouts', this)"><span class="icon">💸</span> Manage Payouts <span class="nav-badge" id="badge-payouts">0</span></div>
+      <div class="dash-nav-item" onclick="alert('Generating comprehensive analytics report...')"><span class="icon">📈</span> Daily Reports</div>
+      <div class="dash-nav-item" onclick="logout()" style="color:#c0392b; margin-top: 20px;"><span class="icon">🚪</span> Logout</div>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="dash-main">
+    <div class="dash-header">
+      <div>
+        <h2 id="page-title">System Overview</h2>
+        <p id="page-subtitle" style="color:#666;font-size:0.88rem;">Monitor operations, verify farmers, and resolve active disputes.</p>
+      </div>
+      <button class="btn btn-primary" onclick="alert('Generating PDF Report...')">📥 Download Report</button>
+    </div>
+
+    <!-- TAB: OVERVIEW -->
+    <div id="tab-overview" class="tab-content active">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="s-label">Pending Verifications</div>
+          <div class="s-val" id="stat-verifications">0</div>
+          <div class="s-sub">KYC & Land Docs waiting</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-label">Active Disputes</div>
+          <div class="s-val" id="stat-disputes">0</div>
+          <div class="s-sub">Requires admin mediation</div>
+        </div>
+        <div class="stat-card good">
+          <div class="s-label">Today's Payouts</div>
+          <div class="s-val" id="stat-payouts">0</div>
+          <div class="s-sub">✓ Successfully cleared via UPI</div>
+        </div>
+        <div class="stat-card good">
+          <div class="s-label">Total Live Orders</div>
+          <div class="s-val" id="stat-orders">0</div>
+          <div class="s-sub">Logistics tracking active</div>
+        </div>
+      </div>
+      
+      <div class="admin-section">
+        <h3>🧑‍🌾 Recent Verification Requests</h3>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead><tr><th>Farmer Name</th><th>Location</th><th>Status</th></tr></thead>
+            <tbody id="overview-verifications-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: VERIFICATIONS -->
+    <div id="tab-verifications" class="tab-content">
+      <div class="admin-section">
+        <h3>🧑‍🌾 Pending Farmer Verifications</h3>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Farmer Name</th><th>Location</th><th>Documents Submitted</th><th>Date</th><th>Action</th></tr>
+            </thead>
+            <tbody id="verifications-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: ORDERS -->
+    <div id="tab-orders" class="tab-content">
+      <div class="admin-section">
+        <h3>📦 Live Logistics & Orders</h3>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr><th>Order ID</th><th>Consumer</th><th>Items</th><th>Amount</th><th>Status</th><th>Action</th></tr>
+            </thead>
+            <tbody id="orders-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: DISPUTES -->
+    <div id="tab-disputes" class="tab-content">
+      <div class="admin-section">
+        <h3>⚖️ Active Order Disputes</h3>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr><th>Order ID</th><th>Consumer</th><th>Issue Description</th><th>Escrow Status</th><th>Action</th></tr>
+            </thead>
+            <tbody id="disputes-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PAYOUTS -->
+    <div id="tab-payouts" class="tab-content">
+      <div class="admin-section">
+        <h3>💸 Farmer Payouts & Escrow</h3>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr><th>Payout ID</th><th>Farmer Name</th><th>Amount</th><th>Date</th><th>Status</th><th>Action</th></tr>
+            </thead>
+            <tbody id="payouts-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:16px;"><div class="nav-logo-icon">🌾</div><span class="nav-logo-text">Farmer's<span>Direct</span></span></div>
+        <p>A digital farm-to-consumer marketplace. TD-PCL Project · Jain University · 2024–25</p>
+      </div>
+      <div class="footer-col"><h4>Platform</h4><ul><li><a href="index.html">Home</a></li><li><a href="consumer.html">Marketplace</a></li><li><a href="farmer.html">Farmer Portal</a></li><li><a href="admin-login.html">Admin Dashboard</a></li><li><a href="about.html">About</a></li></ul></div>
+      <div class="footer-col"><h4>Features</h4><ul><li><a href="#">Blockchain Trace</a></li><li><a href="#">AI Pricing</a></li><li><a href="#">Escrow Payments</a></li><li><a href="#">24hr Delivery</a></li></ul></div>
+      <div class="footer-col"><h4>Team</h4><ul><li><a href="about.html">G Ashika</a></li><li><a href="about.html">T Anbuselvan</a></li><li><a href="about.html">Dev Patel</a></li><li><a href="about.html">M. Vinayaga</a></li></ul></div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  function switchTab(tabId, el) {
+    document.querySelectorAll('.dash-nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+
+    const title = document.getElementById('page-title');
+    const sub = document.getElementById('page-subtitle');
+    if(tabId === 'tab-overview') { title.innerText = 'System Overview'; sub.innerText = 'Monitor operations, verify farmers, and resolve active disputes.'; }
+    if(tabId === 'tab-verifications') { title.innerText = 'Farmer Verifications'; sub.innerText = 'Review and manage farmer accounts.'; }
+    if(tabId === 'tab-orders') { title.innerText = 'Live Orders'; sub.innerText = 'Track all platform orders in real-time.'; }
+    if(tabId === 'tab-disputes') { title.innerText = 'Dispute Management'; sub.innerText = 'Mediate consumer and farmer issues.'; }
+    if(tabId === 'tab-payouts') { title.innerText = 'Escrow Payouts'; sub.innerText = 'Manage farmer payouts and platform fees.'; }
+  }
+
+  async function loadAdminData() {
+    try {
+      // Load stats
+      const stats = await StatsAPI.get();
+      document.getElementById('stat-verifications').innerText = stats.farmers;
+      document.getElementById('stat-orders').innerText = stats.orders;
+      document.getElementById('stat-disputes').innerText = '0';
+      document.getElementById('stat-payouts').innerText = '₹' + stats.totalRevenue.toLocaleString();
+
+      document.getElementById('badge-verifications').innerText = stats.farmers;
+      document.getElementById('badge-orders').innerText = stats.orders;
+      document.getElementById('badge-disputes').innerText = '0';
+      document.getElementById('badge-payouts').innerText = stats.orders;
+
+      // Load all orders
+      const orders = await OrdersAPI.all();
+      document.getElementById('orders-table').innerHTML = orders.map(o => `
+        <tr>
+          <td data-label="Order ID">#${o._id.slice(-6).toUpperCase()}</td>
+          <td data-label="Consumer">${o.consumer?.name || 'N/A'}</td>
+          <td data-label="Items">${o.items.map(i => i.name).join(', ')}</td>
+          <td data-label="Amount">₹${o.totalAmount}</td>
+          <td data-label="Status"><span class="badge" style="background:#eaf2ea;color:#2d6a2d;">${o.status}</span></td>
+          <td data-label="Action" class="action-btns">
+            <button class="btn btn-sm" style="background:var(--gray-warm);color:var(--black);" onclick="alert('Payment ID: ${o.paymentId}')">Details</button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Load products for overview
+      const data = await ProductsAPI.getAll();
+      document.getElementById('overview-verifications-table').innerHTML = data.products.slice(0, 3).map(p => `
+        <tr>
+          <td data-label="Farmer Name"><strong>${p.farmer?.name || 'N/A'}</strong></td>
+          <td data-label="Location">${p.farmer?.location || 'N/A'}</td>
+          <td data-label="Status"><span class="badge" style="background:#eaf2ea;color:#2d6a2d;">Verified ✓</span></td>
+        </tr>
+      `).join('');
+
+    } catch (err) {
+      console.error('Admin data error:', err);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadAdminData);
+</script>
+</body>
+</html>
+

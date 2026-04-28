@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Price Prediction — Farmer's Direct</title>
+  <meta name="description" content="Get real-time AI-powered crop market price predictions using Groq AI. Analyze APMC trends, demand, and optimal selling windows." />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <style>
+    .page-hero-ai {
+      background: linear-gradient(160deg, #080808, var(--black), #111);
+      padding: 120px 5% 70px;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero-ai::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 50% at 70% 40%, rgba(202,184,79,0.1) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(183,126,0,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .page-hero-ai h1 { color: var(--white-off); position: relative; }
+    .page-hero-ai p  { color: rgba(250,247,238,0.6); position: relative; max-width: 600px; }
+    .page-hero-ai .section-label { color: var(--gold); position: relative; }
+
+    .ai-container {
+      max-width: 900px;
+      margin: -40px auto 60px;
+      padding: 0 5%;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* API Key Setup */
+    .key-card {
+      background: var(--white-pure);
+      border: 1px solid var(--gray-subtle);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .key-card h3 { margin-bottom: 8px; }
+    .key-card p { font-size: 0.9rem; margin-bottom: 24px; }
+    .key-card .key-input-row {
+      display: flex; gap: 12px;
+      max-width: 500px; margin: 0 auto;
+    }
+    .key-card input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--gray-warm);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+    }
+    .key-card input:focus { outline: 2px solid var(--gold); border-color: var(--gold); }
+    .key-card .key-help {
+      margin-top: 16px;
+      font-size: 0.78rem;
+      color: var(--gray-text);
+    }
+    .key-card .key-help a { color: var(--gold-deep); text-decoration: underline; }
+
+    /* Prediction Form */
+    .pred-form-card {
+      background: var(--white-pure);
+      border: 1px solid var(--gray-subtle);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      margin-bottom: 32px;
+    }
+    .pred-form-card h3 { margin-bottom: 6px; }
+    .pred-form-card > p { font-size: 0.88rem; margin-bottom: 28px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+    }
+    .form-group input, .form-group select {
+      padding: 12px 16px;
+      border: 1px solid var(--gray-warm);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      background: var(--white-off);
+      transition: all var(--transition);
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px var(--gold-muted);
+    }
+
+    .form-actions {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .btn-spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .change-key-btn {
+      background: none; border: none;
+      color: var(--gray-text);
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-decoration: underline;
+      font-family: var(--font-body);
+    }
+
+    /* AI Loader */
+    .ai-loader {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 48px 0;
+    }
+    .ai-loader-dots {
+      display: flex; gap: 8px;
+    }
+    .ai-loader-dots span {
+      width: 12px; height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: bounce 1.4s ease-in-out infinite;
+    }
+    .ai-loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+    .ai-loader p { font-size: 0.88rem; color: var(--gray-text); }
+
+    /* Prediction Results */
+    .prediction-card {
+      background: linear-gradient(135deg, var(--black), #151515);
+      border: 1px solid rgba(202,184,79,0.2);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-gold);
+    }
+    .pred-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 32px; flex-wrap: wrap; gap: 12px;
+    }
+    .pred-badge {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .pred-price-hero {
+      text-align: center;
+      padding: 32px 0;
+      border-top: 1px solid rgba(202,184,79,0.15);
+      border-bottom: 1px solid rgba(202,184,79,0.15);
+      margin-bottom: 32px;
+    }
+    .pred-price-label {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(212,201,168,0.6);
+      margin-bottom: 8px;
+    }
+    .pred-price-value {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: -0.02em;
+    }
+    .pred-price-unit {
+      display: block;
+      font-size: 0.85rem;
+      color: rgba(212,201,168,0.5);
+      margin-top: 4px;
+    }
+
+    .pred-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .pred-metric {
+      background: rgba(202,184,79,0.04);
+      border: 1px solid rgba(202,184,79,0.1);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    .pm-label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(212,201,168,0.5);
+      margin-bottom: 6px;
+    }
+    .pm-value {
+      display: block;
+      font-weight: 700;
+      color: var(--gold-pale);
+      font-size: 0.95rem;
+    }
+
+    .pred-insights {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .pred-insight-box {
+      background: rgba(202,184,79,0.04);
+      border: 1px solid rgba(202,184,79,0.1);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .pred-insight-box h4 {
+      color: var(--gold);
+      font-size: 0.88rem;
+      margin-bottom: 8px;
+    }
+    .pred-insight-box p {
+      color: rgba(250,247,238,0.6);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .ai-error {
+      background: rgba(192,57,43,0.08);
+      border: 1px solid rgba(192,57,43,0.25);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+    }
+    .ai-error p { color: #c0392b; }
+
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .pred-metrics { grid-template-columns: 1fr 1fr; }
+      .pred-insights { grid-template-columns: 1fr; }
+      .key-card .key-input-row { flex-direction: column; }
+      .prediction-card { padding: 24px; }
+      .pred-price-value { font-size: 2.5rem; }
+    }
+    @media (max-width: 480px) {
+      .pred-metrics { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text">Farmer's<span>Direct</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="farmer.html">For Farmers</a></li>
+    <li><a href="consumer.html">Marketplace</a></li>
+    <li><a href="ai-pricing.html" class="active">AI Pricing</a></li>
+    <li><a href="admin-login.html">Admin</a></li>
+    <li><a href="farmer.html" class="nav-cta">Join Now</a></li>
+  </ul>
+  <div class="nav-hamburger" role="button" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero-ai">
+  <div class="container">
+    <p class="section-label">Powered by Groq AI</p>
+    <h1>AI Market Price Prediction</h1>
+    <p>Get real-time, AI-powered price suggestions for your crops. Our AI analyzes APMC Mandi data, seasonal trends, and demand patterns to suggest the fairest price.</p>
+  </div>
+</div>
+
+<div class="ai-container">
+
+  <!-- Prediction Tool -->
+  <div id="prediction-tool">
+
+    <div class="pred-form-card">
+      <h3>🌾 Crop Details</h3>
+      <p>Enter your crop information to receive an AI-powered market analysis.</p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="crop-name">Crop Name *</label>
+          <input type="text" id="crop-name" placeholder="e.g. Tomato, Rice, Mango..." />
+        </div>
+        <div class="form-group">
+          <label for="crop-location">Location *</label>
+          <input type="text" id="crop-location" placeholder="e.g. Tumkur, Karnataka" />
+        </div>
+        <div class="form-group">
+          <label for="crop-qty">Quantity *</label>
+          <input type="number" id="crop-qty" placeholder="e.g. 500" min="1" />
+        </div>
+        <div class="form-group">
+          <label for="crop-unit">Unit</label>
+          <select id="crop-unit">
+            <option value="kg">Kilograms (kg)</option>
+            <option value="quintal">Quintals</option>
+            <option value="ton">Tonnes</option>
+            <option value="dozen">Dozens</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="crop-quality">Quality Grade</label>
+          <select id="crop-quality">
+            <option value="A-Grade (Premium)">A-Grade (Premium)</option>
+            <option value="B-Grade (Standard)" selected>B-Grade (Standard)</option>
+            <option value="C-Grade (Economy)">C-Grade (Economy)</option>
+            <option value="Organic Certified">Organic Certified</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button id="predict-btn" class="btn btn-primary btn-lg" onclick="getPrediction()">🔮 Get AI Price Prediction</button>
+        <p style="font-size:0.78rem;color:var(--gray-text);">Powered by Groq AI · Llama 3.3 70B</p>
+      </div>
+    </div>
+
+    <!-- Loader -->
+    <div id="ai-loader" class="ai-loader">
+      <div class="ai-loader-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <p>Analyzing market data with Groq AI...</p>
+    </div>
+
+    <!-- Results -->
+    <div id="ai-results"></div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:16px;">
+          <div class="nav-logo-icon">🌾</div>
+          <span class="nav-logo-text">Farmer's<span>Direct</span></span>
+        </div>
+        <p>A digital farm-to-consumer marketplace. TD-PCL Project · Jain University · 2024–25</p>
+      </div>
+      <div class="footer-col"><h4>Platform</h4><ul><li><a href="index.html">Home</a></li><li><a href="consumer.html">Marketplace</a></li><li><a href="farmer.html">Farmer Portal</a></li><li><a href="ai-pricing.html">AI Pricing</a></li><li><a href="about.html">About</a></li></ul></div>
+      <div class="footer-col"><h4>Features</h4><ul><li><a href="#">Blockchain Trace</a></li><li><a href="ai-pricing.html">AI Pricing</a></li><li><a href="#">Escrow Payments</a></li><li><a href="#">24hr Delivery</a></li></ul></div>
+      <div class="footer-col"><h4>Team</h4><ul><li><a href="about.html">G Ashika</a></li><li><a href="about.html">T Anbuselvan</a></li><li><a href="about.html">Dev Patel</a></li><li><a href="about.html">M. Vinayaga</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Farmer's Direct · <span>Jain University</span> TD-PCL Project</p>
+      <p>Mentored by <span>Mr. Shine VJ</span> & <span>Mr. Himanshu Verma</span></p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script>
+  // Check login
+  if (!Auth.isLoggedIn()) {
+    alert('Please login to use AI Price Prediction.');
+    window.location.href = 'admin-login.html';
+  }
+
+  async function getPrediction() {
+    const crop = document.getElementById('crop-name').value.trim();
+    const qty = document.getElementById('crop-qty').value.trim();
+    const unit = document.getElementById('crop-unit').value;
+    const location = document.getElementById('crop-location').value.trim();
+    const quality = document.getElementById('crop-quality').value;
+
+    if (!crop || !qty || !location) return alert('Please fill all required fields.');
+
+    const btn = document.getElementById('predict-btn');
+    const loader = document.getElementById('ai-loader');
+    const resultsDiv = document.getElementById('ai-results');
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-spinner"></span> Analyzing...';
+    loader.style.display = 'flex';
+    resultsDiv.innerHTML = '';
+
+    try {
+      const p = await AiAPI.predict({ crop, quantity: qty, unit, location, quality });
+      const trendIcon = p.trend === 'Rising' ? '📈' : p.trend === 'Declining' ? '📉' : '➡️';
+      const trendColor = p.trend === 'Rising' ? '#2d6a2d' : p.trend === 'Declining' ? '#c0392b' : 'var(--gold-deep)';
+      const demandColor = p.demand_level === 'High' ? '#2d6a2d' : p.demand_level === 'Low' ? '#c0392b' : 'var(--gold-deep)';
+
+      resultsDiv.innerHTML = `
+        <div class="prediction-card">
+          <div class="pred-header">
+            <div><span class="section-label" style="color:var(--gold);">AI Market Analysis</span><h2 style="color:var(--white-off);margin-top:4px;">${p.crop}</h2></div>
+            <div class="pred-badge" style="background:${trendColor}20;color:${trendColor};border:1px solid ${trendColor}40;">${trendIcon} ${p.trend}</div>
+          </div>
+          <div class="pred-price-hero">
+            <span class="pred-price-label">AI Suggested Price</span>
+            <span class="pred-price-value">₹${p.suggested_price_per_kg}</span>
+            <span class="pred-price-unit">per kg</span>
+          </div>
+          <div class="pred-metrics">
+            <div class="pred-metric"><span class="pm-label">Price Range</span><span class="pm-value">₹${p.price_range.min} – ₹${p.price_range.max}</span></div>
+            <div class="pred-metric"><span class="pm-label">APMC Reference</span><span class="pm-value">₹${p.apmc_reference_price}/kg</span></div>
+            <div class="pred-metric"><span class="pm-label">Platform Advantage</span><span class="pm-value" style="color:#2d6a2d;">+${p.platform_advantage_percent}%</span></div>
+            <div class="pred-metric"><span class="pm-label">Demand Level</span><span class="pm-value" style="color:${demandColor};">${p.demand_level}</span></div>
+            <div class="pred-metric"><span class="pm-label">Best Window</span><span class="pm-value">${p.best_selling_window}</span></div>
+            <div class="pred-metric"><span class="pm-label">Trend Reason</span><span class="pm-value" style="font-size:0.82rem;">${p.trend_reason}</span></div>
+          </div>
+          <div class="pred-insights">
+            <div class="pred-insight-box"><h4>💡 Storage Tip</h4><p>${p.storage_tip}</p></div>
+            <div class="pred-insight-box"><h4>📊 Market Summary</h4><p>${p.summary}</p></div>
+          </div>
+        </div>`;
+    } catch (err) {
+      resultsDiv.innerHTML = `<div class="ai-error"><p>⚠️ ${err.message}</p></div>`;
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '🔮 Get AI Price Prediction';
+      loader.style.display = 'none';
+    }
+  }
+</script>
+</body>
+</html>

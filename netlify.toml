@@ -1,0 +1,24 @@
+[build]
+  # No build command needed for pure HTML/CSS/JS
+  command = ""
+  # The root directory is our publish directory since index.html is there
+  publish = "."
+
+# Clean URL redirects for convenience
+[[redirects]]
+  from = "/admin"
+  to = "/admin-login.html"
+  status = 301
+
+[[redirects]]
+  from = "/admin-dashboard"
+  to = "/admin.html"
+  status = 301
+
+# Add standard security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"

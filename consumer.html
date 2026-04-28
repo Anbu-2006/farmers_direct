@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketplace — Farmer's Direct</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <style>
+    .page-hero { background: var(--black); padding: 120px 5% 60px; }
+    .page-hero h1 { color: var(--white-off); }
+    .page-hero p  { color: rgba(250,247,238,0.6); margin-top: 8px; }
+
+    .marketplace-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+      padding: 48px 5%;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* Sidebar Filters */
+    .filter-sidebar {
+      position: sticky; top: 90px;
+      height: fit-content;
+    }
+
+    .filter-box {
+      background: var(--white-off);
+      border: 1px solid var(--gray-warm);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .filter-box h4 {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--gold-pale);
+    }
+
+    .filter-chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .chip {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--gray-warm);
+      background: var(--white-off);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition);
+      color: #555;
+    }
+    .chip.active, .chip:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--black);
+    }
+
+    .filter-range input[type=range] {
+      width: 100%;
+      accent-color: var(--gold-deep);
+      margin-top: 8px;
+    }
+
+    .filter-range .range-labels {
+      display: flex; justify-content: space-between;
+      font-size: 0.78rem; color: #777; margin-top: 4px;
+    }
+
+    /* Product Area */
+    .products-area {}
+
+    .products-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+    }
+
+    .product-count { font-size: 0.88rem; color: #777; }
+    .product-count strong { color: var(--black); }
+
+    .sort-select {
+      padding: 8px 16px;
+      border: 1px solid var(--gray-warm);
+      border-radius: var(--radius);
+      background: var(--white-off);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--black);
+      cursor: pointer;
+    }
+    .sort-select:focus { outline: 2px solid var(--gold); }
+
+    .products-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    /* Cart Sidebar (fixed) */
+    .cart-float {
+      position: fixed; bottom: 28px; right: 28px;
+      background: var(--gold-deep);
+      color: var(--white-off);
+      border: none;
+      padding: 16px 24px;
+      border-radius: 50px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(183,126,0,0.4);
+      display: flex; align-items: center; gap: 10px;
+      transition: all var(--transition);
+      z-index: 100;
+    }
+    .cart-float:hover { background: var(--gold); color: var(--black); transform: translateY(-3px); }
+    .cart-badge {
+      background: var(--black); color: var(--gold);
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+    }
+
+    /* Coming soon overlay on cards */
+    .app-note {
+      background: var(--gold-pale);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      margin-top: 32px;
+    }
+    .app-note p { font-size: 0.88rem; color: var(--brown); }
+    .app-note strong { color: var(--gold-deep); }
+
+    @media (max-width: 1024px) {
+      .marketplace-layout { grid-template-columns: 1fr; }
+      .filter-sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .products-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .marketplace-layout { padding: 24px 4%; }
+      .products-grid-2 { grid-template-columns: 1fr; }
+      .filter-sidebar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text">Farmer's<span>Direct</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="farmer.html">For Farmers</a></li>
+    <li><a href="consumer.html" class="active">Marketplace</a></li>
+    <li><a href="ai-pricing.html">AI Pricing</a></li>
+    <li><a href="admin-login.html">Admin</a></li>
+    <li><a href="farmer.html" class="nav-cta">Join Now</a></li>
+  </ul>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="prototype-banner">⚠️ This is a UI Prototype — Full ordering & payment functionality coming soon</div>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="container">
+    <p class="section-label">Fresh from the Farm</p>
+    <h1>Today's Marketplace</h1>
+    <p>Browse fresh produce listed directly by verified farmers near you. All products are blockchain-traced and quality verified.</p>
+  </div>
+</div>
+
+<!-- MARKETPLACE -->
+<div class="marketplace-layout">
+
+  <!-- Sidebar -->
+  <aside class="filter-sidebar">
+    <div class="filter-box">
+      <h4>Category</h4>
+      <div class="filter-chip-group" id="cat-chips">
+        <span class="chip active" data-cat="All">All</span>
+        <span class="chip" data-cat="Vegetables">Vegetables</span>
+        <span class="chip" data-cat="Fruits">Fruits</span>
+        <span class="chip" data-cat="Greens">Greens</span>
+        <span class="chip" data-cat="Spices">Spices</span>
+        <span class="chip" data-cat="Poultry">Poultry</span>
+        <span class="chip" data-cat="Dairy">Dairy</span>
+      </div>
+    </div>
+
+    <div class="filter-box">
+      <h4>Price Range</h4>
+      <div class="filter-range">
+        <input type="range" min="0" max="500" value="500" id="price-range" />
+        <div class="range-labels">
+          <span>₹0</span>
+          <span id="price-val">Up to ₹500</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-box">
+      <h4>Freshness</h4>
+      <div class="filter-chip-group">
+        <span class="chip active">Today</span>
+        <span class="chip">Yesterday</span>
+        <span class="chip">2 Days</span>
+      </div>
+    </div>
+
+    <div class="filter-box">
+      <h4>Rating</h4>
+      <div class="filter-chip-group">
+        <span class="chip active">★ 4.5+</span>
+        <span class="chip">★ 4.0+</span>
+        <span class="chip">All</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Products -->
+  <main class="products-area">
+    <div class="products-toolbar">
+      <p class="product-count"><strong id="product-count">6</strong> products available near you</p>
+      <select class="sort-select" id="sort-select">
+        <option>Sort: Newest First</option>
+        <option>Price: Low to High</option>
+        <option>Price: High to Low</option>
+        <option>Rating: Highest</option>
+      </select>
+    </div>
+
+    <div class="products-grid-2" id="market-grid">
+      <!-- Populated by JS -->
+    </div>
+
+    <div class="app-note">
+      <p>🌾 <strong>Full app coming soon!</strong> Place orders, track delivery, and scan QR codes for blockchain verification on our Android & iOS app launching Q3 2025.</p>
+    </div>
+  </main>
+</div>
+
+<!-- Cart Float -->
+<button class="cart-float" onclick="alert('Shopping cart coming in the full app!')">
+  🛒 View Cart <span class="cart-badge">0</span>
+</button>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:16px;">
+          <div class="nav-logo-icon">🌾</div>
+          <span class="nav-logo-text">Farmer's<span>Direct</span></span>
+        </div>
+        <p>A digital farm-to-consumer marketplace. TD-PCL Project · Jain University · 2024–25</p>
+      </div>
+      <div class="footer-col"><h4>Platform</h4><ul><li><a href="index.html">Home</a></li><li><a href="consumer.html">Marketplace</a></li><li><a href="farmer.html">Farmer Portal</a></li><li><a href="admin-login.html">Admin Dashboard</a></li><li><a href="about.html">About</a></li></ul></div>
+      <div class="footer-col"><h4>Features</h4><ul><li><a href="#">Blockchain Trace</a></li><li><a href="#">AI Pricing</a></li><li><a href="#">Escrow Payments</a></li><li><a href="#">24hr Delivery</a></li></ul></div>
+      <div class="footer-col"><h4>Team</h4><ul><li><a href="about.html">G Ashika</a></li><li><a href="about.html">T Anbuselvan</a></li><li><a href="about.html">Dev Patel</a></li><li><a href="about.html">M. Vinayaga</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Farmer's Direct · <span>Jain University</span> TD-PCL Project</p>
+      <p>Mentored by <span>Mr. Shine VJ</span> & <span>Mr. Himanshu Verma</span></p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script>
+  let cartCount = 0;
+  let cartItems = [];
+  let allProducts = [];
+
+  async function loadProducts(params = {}) {
+    try {
+      const data = await ProductsAPI.getAll(params);
+      allProducts = data.products;
+      renderProducts(allProducts);
+    } catch (err) {
+      document.getElementById('market-grid').innerHTML = `<p style="color:#c0392b;">Failed to load products: ${err.message}</p>`;
+    }
+  }
+
+  function renderProducts(items) {
+    const grid = document.getElementById('market-grid');
+    document.getElementById('product-count').textContent = items.length;
+    grid.innerHTML = items.map(p => `
+      <div class="product-card reveal">
+        <div class="card-img">
+          <img src="${p.image || 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400'}" alt="${p.name}" loading="lazy"/>
+          <div class="card-badge"><span class="badge badge-fresh">${p.freshness}</span></div>
+        </div>
+        <div class="card-body">
+          <span class="badge badge-dark" style="font-size:0.68rem;margin-bottom:6px;">${p.category}</span>
+          <h3>${p.name}</h3>
+          <p class="farmer-name">👨‍🌾 ${p.farmer?.name || 'Unknown'} · ${p.farmer?.location || ''}</p>
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px;">
+            <span style="color:var(--gold-deep);font-size:0.82rem;">★ ${p.rating}</span>
+            <span style="color:#999;font-size:0.78rem;">${p.reviews} reviews</span>
+          </div>
+          <div style="margin-bottom:8px;">
+            <span class="badge" style="background:#eaf2ea;color:#2d6a2d;font-size:0.7rem;">🔗 Blockchain Verified</span>
+            ${p.aiSuggestedPrice ? `<span class="badge" style="background:rgba(202,184,79,0.15);color:var(--gold-deep);font-size:0.7rem;margin-left:4px;">🤖 AI: ₹${p.aiSuggestedPrice}</span>` : ''}
+          </div>
+          <div class="card-footer">
+            <span class="price">₹${p.price}/${p.unit}</span>
+            <button class="btn btn-primary btn-sm" onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.unit}',this)">+ Cart</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    grid.querySelectorAll('.reveal').forEach(el => {
+      new IntersectionObserver(e => { if(e[0].isIntersecting) e[0].target.classList.add('visible'); }, {threshold:0.1}).observe(el);
+    });
+  }
+
+  function addToCart(id, name, price, unit, btn) {
+    cartItems.push({ productId: id, name, price, quantity: 1, unit });
+    cartCount++;
+    document.querySelector('.cart-badge').textContent = cartCount;
+    btn.textContent = '✓ Added';
+    btn.style.background = '#2d6a2d';
+    setTimeout(() => { btn.textContent = '+ Cart'; btn.style.background = ''; }, 2000);
+  }
+
+  // Checkout
+  document.querySelector('.cart-float').addEventListener('click', async () => {
+    if (!Auth.isLoggedIn()) return alert('Please login as a consumer to place orders.\n\nGo to: Login page');
+    if (cartItems.length === 0) return alert('Your cart is empty!');
+    const addr = prompt('Enter delivery address:');
+    if (!addr) return;
+    try {
+      const result = await OrdersAPI.place({ items: cartItems, deliveryAddress: addr });
+      alert(`✅ Order placed!\n\nTotal: ₹${result.order.totalAmount}\nPayment ID: ${result.order.paymentId}\nStatus: ${result.order.status}`);
+      cartItems = []; cartCount = 0;
+      document.querySelector('.cart-badge').textContent = '0';
+    } catch (err) { alert('Order failed: ' + err.message); }
+  });
+
+  // Filter by category
+  document.querySelectorAll('#cat-chips .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#cat-chips .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const cat = chip.dataset.cat;
+      if (cat === 'All') loadProducts();
+      else loadProducts({ category: cat });
+    });
+  });
+
+  // Price range filter
+  const priceRange = document.getElementById('price-range');
+  priceRange?.addEventListener('input', () => {
+    document.getElementById('price-val').textContent = `Up to ₹${priceRange.value}`;
+    loadProducts({ maxPrice: priceRange.value });
+  });
+
+  loadProducts();
+</script>
+</body>
+</html>
+

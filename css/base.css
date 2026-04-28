@@ -1,0 +1,112 @@
+/* === BASE.CSS — Reset, Variables, Typography === */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:        #CAB84F;
+  --gold-pale:   #F5E8A3;
+  --gold-deep:   #B77E00;
+  --gold-glow:   rgba(202,184,79,0.18);
+  --gold-muted:  rgba(202,184,79,0.08);
+  --black:       #0D0D0D;
+  --black-soft:  #1a1a1a;
+  --brown:       #7A3B19;
+  --brown-rich:  #5a2d10;
+  --white-off:   #FAF7EE;
+  --white-pure:  #ffffff;
+  --gray-warm:   #D4C9A8;
+  --gray-text:   #6b6b6b;
+  --gray-subtle: #e8e4da;
+
+  --font-display: 'Playfair Display', serif;
+  --font-body:    'Inter', sans-serif;
+
+  --radius:      8px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --transition:  0.3s ease;
+  --transition-smooth: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --shadow-soft:    0 4px 20px rgba(0,0,0,0.06);
+  --shadow:         0 8px 32px rgba(0,0,0,0.12);
+  --shadow-lg:      0 16px 48px rgba(0,0,0,0.16);
+  --shadow-gold:    0 8px 32px rgba(183,126,0,0.18);
+  --shadow-gold-lg: 0 16px 48px rgba(183,126,0,0.22);
+  --shadow-inset:   inset 0 2px 4px rgba(0,0,0,0.04);
+
+  --glass-bg:    rgba(255,255,255,0.7);
+  --glass-border: rgba(202,184,79,0.25);
+  --glass-blur:  12px;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--white-off);
+  color: var(--black);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.15;
+  color: var(--black);
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: clamp(2.4rem, 5vw, 4.2rem); font-weight: 900; }
+h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 700; }
+h3 { font-size: clamp(1.2rem, 2vw, 1.6rem); font-weight: 700; }
+h4 { font-size: 1.1rem; font-weight: 700; }
+
+p { font-size: 1rem; color: var(--gray-text); line-height: 1.8; }
+
+a { text-decoration: none; color: inherit; }
+
+img { max-width: 100%; display: block; }
+
+ul { list-style: none; }
+
+::selection {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.section-label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 0.8rem;
+  display: inline-block;
+}
+
+.gold-line {
+  width: 56px; height: 3px;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+  margin: 1rem 0 1.6rem;
+  border-radius: 2px;
+}
+
+.gold-line.centered { margin: 1rem auto 1.6rem; }
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }

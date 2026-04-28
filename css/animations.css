@@ -1,0 +1,178 @@
+/* === ANIMATIONS.CSS — Premium Micro-Animations === */
+
+/* Gold shimmer for hero heading */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.text-shimmer {
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold), #fff8d0, var(--gold), var(--gold-deep));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* Grain overlay */
+@keyframes grain {
+  0%, 100% { transform: translate(0,0) }
+  10%       { transform: translate(-2%,-1%) }
+  30%       { transform: translate(1%,-2%) }
+  50%       { transform: translate(-1%,2%) }
+  70%       { transform: translate(2%,1%) }
+  90%       { transform: translate(-2%,2%) }
+}
+
+.grain::after {
+  content: '';
+  position: absolute; inset: -50%;
+  width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  animation: grain 0.8s steps(1) infinite;
+}
+
+/* Floating particles */
+@keyframes floatUp {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+  100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+/* Pulse glow */
+@keyframes pulseGold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(202,184,79,0); }
+  50%       { box-shadow: 0 0 0 14px rgba(202,184,79,0.12); }
+}
+
+.pulse-gold { animation: pulseGold 3s ease-in-out infinite; }
+
+/* Underline draw */
+@keyframes drawLine {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.animated-underline {
+  position: relative;
+  display: inline-block;
+}
+.animated-underline::after {
+  content: '';
+  position: absolute; bottom: -6px; left: 0;
+  width: 100%; height: 4px;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: drawLine 0.8s ease forwards 0.5s;
+}
+
+/* Hero float animation */
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-14px); }
+}
+
+/* Rotate slow */
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Fade in up (one-shot) */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up-1 { animation: fadeUp 0.7s ease both 0.1s; }
+.fade-up-2 { animation: fadeUp 0.7s ease both 0.3s; }
+.fade-up-3 { animation: fadeUp 0.7s ease both 0.5s; }
+.fade-up-4 { animation: fadeUp 0.7s ease both 0.7s; }
+
+/* Scroll progress bar */
+#scroll-progress {
+  position: fixed; top: 70px; left: 0;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold), var(--gold-pale));
+  z-index: 999;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 10px rgba(202,184,79,0.4);
+}
+
+/* Morphing gradient blob for hero */
+@keyframes blobMorph {
+  0%   { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  25%  { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  50%  { border-radius: 50% 60% 30% 60% / 30% 40% 70% 50%; }
+  75%  { border-radius: 40% 60% 60% 30% / 60% 30% 50% 60%; }
+  100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 0.8; }
+}
+
+/* Stats counter slide in */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Line connector animation */
+@keyframes lineGrow {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+/* Particle system for hero */
+.hero-particles {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat linear infinite;
+}
+
+@keyframes particleFloat {
+  0%   { opacity: 0; transform: translateY(100vh) scale(0); }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.2; }
+  100% { opacity: 0; transform: translateY(-20vh) scale(1); }
+}
+
+/* Floating scroll indicator */
+@keyframes floatLine {
+  0%, 100% { opacity: 1; transform: scaleY(1); }
+  50%       { opacity: 0.4; transform: scaleY(0.5); }
+}
+
+/* Card tilt on hover */
+.card-hover-lift {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+.card-hover-lift:hover {
+  transform: translateY(-8px);
+}
+
+/* Glow ring for step numbers */
+@keyframes ringPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(202,184,79,0.3); }
+  50%      { box-shadow: 0 0 0 10px rgba(202,184,79,0); }
+}

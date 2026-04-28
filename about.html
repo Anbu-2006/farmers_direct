@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Farmer's Direct</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <style>
+    .page-hero {
+      background: var(--black);
+      padding: 140px 5% 90px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(202,184,79,0.06) 0%, transparent 70%);
+    }
+    .page-hero h1 { color: var(--white-off); position: relative; }
+    .page-hero p  { color: rgba(250,247,238,0.65); max-width: 600px; margin: 16px auto 0; font-size: 1.1rem; }
+
+    .problem-section { background: var(--gold-pale); }
+
+    .problem-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 28px;
+      margin-top: 48px;
+    }
+
+    .problem-card {
+      background: var(--white-off);
+      border: 1px solid var(--gray-warm);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    .problem-card .p-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .problem-card h3 { color: var(--brown); font-size: 1.05rem; }
+    .problem-card p  { font-size: 0.9rem; color: #555; margin-top: 8px; }
+
+    .team-section { background: var(--white-off); }
+    .team-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 28px; }
+
+    .team-card {
+      background: var(--white-off);
+      border: 1px solid var(--gray-warm);
+      border-radius: var(--radius);
+      padding: 32px 20px;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    .team-card:hover { border-color: var(--gold); box-shadow: var(--shadow-gold); transform: translateY(-5px); }
+
+    .team-avatar {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      background: var(--gold-pale);
+      border: 3px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.4rem;
+      margin: 0 auto 16px;
+    }
+
+    .team-card h3 { font-size: 1.05rem; margin-bottom: 4px; }
+    .team-card .usn { font-size: 0.75rem; color: var(--gold-deep); font-weight: 700; letter-spacing: 0.08em; }
+    .team-card .dept { font-size: 0.8rem; color: #777; margin-top: 4px; }
+
+    .mentor-section { background: var(--black); padding: 80px 5%; text-align: center; }
+    .mentor-section h2 { color: var(--white-off); margin-bottom: 40px; }
+
+    .mentor-cards { display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; }
+    .mentor-card {
+      background: rgba(202,184,79,0.06);
+      border: 1px solid rgba(202,184,79,0.25);
+      border-radius: var(--radius);
+      padding: 32px 40px;
+      text-align: center;
+      min-width: 240px;
+    }
+    .mentor-card .m-avatar { font-size: 3rem; margin-bottom: 12px; }
+    .mentor-card h3 { color: var(--gold); font-size: 1.1rem; }
+    .mentor-card p  { color: rgba(250,247,238,0.6); font-size: 0.85rem; margin-top: 4px; }
+
+    .uni-section { background: var(--white-off); text-align: center; padding: 70px 5%; }
+    .uni-badge {
+      display: inline-block;
+      background: var(--gold-pale);
+      border: 2px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 24px 48px;
+      margin-top: 24px;
+    }
+    .uni-badge h3 { font-size: 1.4rem; color: var(--black); }
+    .uni-badge p  { color: #555; font-size: 0.9rem; margin-top: 6px; }
+
+    @media (max-width: 1024px) { .team-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 768px)  { .problem-grid { grid-template-columns: 1fr; } .team-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px)  { .team-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <span class="nav-logo-text">Farmer's<span>Direct</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="farmer.html">For Farmers</a></li>
+    <li><a href="consumer.html">Marketplace</a></li>
+    <li><a href="ai-pricing.html">AI Pricing</a></li>
+    <li><a href="admin-login.html">Admin</a></li>
+    <li><a href="farmer.html" class="nav-cta">Join Now</a></li>
+  </ul>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero grain">
+  <p class="section-label fade-up-1" style="color:var(--gold);">Our Story</p>
+  <h1 class="fade-up-2">About Farmer's Direct</h1>
+  <p class="fade-up-3">A student-led initiative to transform how agricultural produce moves across India — using technology, transparency, and trust.</p>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem-section">
+  <div class="container">
+    <div style="text-align:center; margin-bottom:0;">
+      <p class="section-label reveal">The Problem We Solve</p>
+      <h2 class="reveal reveal-delay-1">India's Agricultural Supply Chain is Broken</h2>
+      <div class="gold-line centered reveal reveal-delay-2"></div>
+      <p class="reveal reveal-delay-3" style="max-width:600px;margin:0 auto;color:#555;">
+        85% of India's farmers are small and marginal, yet they earn only a fraction of what consumers pay. Here's why.
+      </p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card reveal">
+        <div class="p-icon">🔗</div>
+        <h3>Too Many Middlemen</h3>
+        <p>Produce passes through 4–6 agents before reaching the consumer. Each takes a cut, leaving farmers with 30–40% of the final price.</p>
+      </div>
+      <div class="problem-card reveal reveal-delay-1">
+        <div class="p-icon">🏷️</div>
+        <h3>False Organic Labels</h3>
+        <p>Consumers pay premium prices for "organic" produce that is often chemically treated or conventionally grown — no way to verify.</p>
+      </div>
+      <div class="problem-card reveal reveal-delay-2">
+        <div class="p-icon">🗑️</div>
+        <h3>Massive Food Waste</h3>
+        <p>40% of harvested produce in India is wasted due to poor demand-supply matching, logistics delays, and lack of market access.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION OVERVIEW -->
+<section style="background:var(--white-off);">
+  <div class="container" style="max-width:860px;">
+    <p class="section-label reveal">Our Approach</p>
+    <h2 class="reveal reveal-delay-1">A Platform Built on Three Pillars</h2>
+    <div class="gold-line reveal reveal-delay-2"></div>
+    <div class="grid-3" style="margin-top:40px;">
+      <div style="padding:24px;background:var(--gold-pale);border-radius:var(--radius);" class="reveal">
+        <div style="font-size:2rem;margin-bottom:12px;">💻</div>
+        <h3>Technology</h3>
+        <p style="font-size:0.9rem;color:#555;margin-top:8px;">Blockchain traceability, AI pricing, React Native mobile apps, Razorpay escrow, AWS backend.</p>
+      </div>
+      <div style="padding:24px;background:var(--gold-pale);border-radius:var(--radius);" class="reveal reveal-delay-1">
+        <div style="font-size:2rem;margin-bottom:12px;">🌾</div>
+        <h3>Agriculture</h3>
+        <p style="font-size:0.9rem;color:#555;margin-top:8px;">Crop certification standards, post-harvest handling, quality preservation, and seasonal forecasting.</p>
+      </div>
+      <div style="padding:24px;background:var(--gold-pale);border-radius:var(--radius);" class="reveal reveal-delay-2">
+        <div style="font-size:2rem;margin-bottom:12px;">📈</div>
+        <h3>Business</h3>
+        <p style="font-size:0.9rem;color:#555;margin-top:8px;">Market analysis, pricing strategy, supply chain optimization, and scalable commission model.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team-section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:52px;">
+      <p class="section-label reveal">Meet the Team</p>
+      <h2 class="reveal reveal-delay-1">The Builders Behind the Platform</h2>
+      <div class="gold-line centered reveal reveal-delay-2"></div>
+    </div>
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-avatar">👩</div>
+        <h3>G Ashika</h3>
+        <p class="usn">24BTRCN008</p>
+        <p class="dept">CSE — General</p>
+      </div>
+      <div class="team-card reveal reveal-delay-1">
+        <div class="team-avatar">👨</div>
+        <h3>T Anbuselvan</h3>
+        <p class="usn">24BTRAD008</p>
+        <p class="dept">CSE — AIDE</p>
+      </div>
+      <div class="team-card reveal reveal-delay-2">
+        <div class="team-avatar">👨</div>
+        <h3>Dev Patel</h3>
+        <p class="usn">24BTRBT008</p>
+        <p class="dept">CSE — CTIS</p>
+      </div>
+      <div class="team-card reveal reveal-delay-3">
+        <div class="team-avatar">👨</div>
+        <h3>M. Vinayaga</h3>
+        <p class="usn">24BTRBT031</p>
+        <p class="dept">CSE — BCT</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENTORS -->
+<section class="mentor-section">
+  <h2 class="reveal">Guided by Our Mentors</h2>
+  <div class="mentor-cards">
+    <div class="mentor-card reveal">
+      <div class="m-avatar">👨‍💻</div>
+      <h3>Mr. Shine VJ</h3>
+      <p>CSE — IoT Department</p>
+      <p>Computer Science & Engineering</p>
+    </div>
+    <div class="mentor-card reveal reveal-delay-1">
+      <div class="m-avatar">👨‍🔬</div>
+      <h3>Mr. Himanshu Verma</h3>
+      <p>CSE — Chemistry Department</p>
+      <p>Computer Science & Engineering</p>
+    </div>
+  </div>
+</section>
+
+<!-- UNIVERSITY -->
+<div class="uni-section">
+  <p class="section-label reveal">Institution</p>
+  <h2 class="reveal reveal-delay-1">Jain Deemed-to-be University</h2>
+  <div class="uni-badge reveal reveal-delay-2">
+    <h3>TD-PCL Transdisciplinary Group Project</h3>
+    <p>Academic Year 2024–25 · 1st Year, 2nd Semester · UG Programme</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:16px;">
+          <div class="nav-logo-icon">🌾</div>
+          <span class="nav-logo-text">Farmer's<span>Direct</span></span>
+        </div>
+        <p>A digital farm-to-consumer marketplace eliminating middlemen and empowering India's small farmers through technology.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="consumer.html">Marketplace</a></li>
+          <li><a href="farmer.html">Farmer Portal</a></li>
+          <li><a href="admin-login.html">Admin Dashboard</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Features</h4>
+        <ul>
+          <li><a href="#">Blockchain Trace</a></li>
+          <li><a href="#">AI Pricing</a></li>
+          <li><a href="#">Escrow Payments</a></li>
+          <li><a href="#">24hr Delivery</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="about.html">Team Page</a></li>
+          <li><a href="#">Jain University</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Farmer's Direct · <span>Jain University</span> TD-PCL Project</p>
+      <p>Mentored by <span>Mr. Shine VJ</span> & <span>Mr. Himanshu Verma</span></p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
