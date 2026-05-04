@@ -5,49 +5,159 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login — Farmer's Direct</title>
   <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/animations.css" />
   <style>
-    body { background: var(--black); min-height: 100vh; display: flex; flex-direction: column; }
-    .login-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 5%; }
-    .login-box { background: var(--white-off); border-radius: var(--radius-lg); padding: 48px 40px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    .login-box h2 { color: var(--black); margin-bottom: 8px; font-size: 1.5rem; }
-    .login-box .subtitle { color: var(--gray-text); font-size: 0.88rem; margin-bottom: 28px; }
-    .form-group { text-align: left; margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--gold-deep); margin-bottom: 6px; letter-spacing: 0.1em; text-transform: uppercase; }
-    .form-group input { width: 100%; padding: 12px 16px; border: 1px solid var(--gray-warm); border-radius: var(--radius); background: #fff; font-family: var(--font-body); font-size: 0.95rem; transition: border-color var(--transition); }
-    .form-group input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-muted); }
-    .btn-login { width: 100%; margin-top: 10px; }
-    .error-msg { color: #c0392b; font-size: 0.82rem; margin-top: 14px; display: none; background: rgba(192,57,43,0.08); padding: 10px; border-radius: var(--radius); }
-    .success-msg { color: #2d6a2d; font-size: 0.82rem; margin-top: 14px; display: none; background: rgba(45,106,45,0.08); padding: 10px; border-radius: var(--radius); }
-    .tabs { display: flex; gap: 0; margin-bottom: 24px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-warm); }
-    .tab { flex: 1; padding: 10px; text-align: center; font-size: 0.82rem; font-weight: 700; cursor: pointer; background: #fff; color: var(--gray-text); transition: all var(--transition); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--black);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+    }
+    .login-wrapper {
+      width: 100%;
+      max-width: 440px;
+      padding: 20px;
+    }
+    .brand {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .brand-icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+    .brand h1 {
+      color: var(--white-off);
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 0.02em;
+    }
+    .brand h1 span { color: var(--gold); }
+    .brand p {
+      color: rgba(250,247,238,0.5);
+      font-size: 0.85rem;
+      margin-top: 6px;
+    }
+    .login-box {
+      background: var(--white-off);
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .login-box h2 {
+      color: var(--black);
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .login-box .subtitle {
+      color: var(--gray-text);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 24px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--gray-warm);
+    }
+    .tab {
+      flex: 1;
+      padding: 11px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: #fff;
+      color: var(--gray-text);
+      transition: all var(--transition);
+    }
     .tab.active { background: var(--gold); color: var(--black); }
-    .cred-hint { margin-top: 20px; font-size: 0.75rem; color: #999; background: var(--gold-muted); padding: 12px; border-radius: var(--radius); text-align: left; line-height: 1.7; }
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold-deep);
+      margin-bottom: 6px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--gray-warm);
+      border-radius: var(--radius);
+      background: #fff;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      transition: border-color var(--transition);
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px var(--gold-muted);
+    }
+    .btn-login { width: 100%; margin-top: 10px; }
+    .error-msg {
+      color: #c0392b;
+      font-size: 0.82rem;
+      margin-top: 14px;
+      display: none;
+      background: rgba(192,57,43,0.08);
+      padding: 10px;
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    .success-msg {
+      color: #2d6a2d;
+      font-size: 0.82rem;
+      margin-top: 14px;
+      display: none;
+      background: rgba(45,106,45,0.08);
+      padding: 10px;
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    .cred-hint {
+      margin-top: 20px;
+      font-size: 0.73rem;
+      color: #999;
+      background: var(--gold-muted);
+      padding: 12px;
+      border-radius: var(--radius);
+      text-align: left;
+      line-height: 1.8;
+    }
     .cred-hint strong { color: var(--gold-deep); }
+    .footer-text {
+      text-align: center;
+      color: rgba(250,247,238,0.3);
+      font-size: 0.72rem;
+      margin-top: 24px;
+    }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <a href="index.html" class="nav-logo">
-    <div class="nav-logo-icon">🌾</div>
-    <span class="nav-logo-text">Farmer's<span>Direct</span></span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="farmer.html">For Farmers</a></li>
-    <li><a href="consumer.html">Marketplace</a></li>
-    <li><a href="ai-pricing.html">AI Pricing</a></li>
-    <li><a href="admin-login.html" class="active">Login</a></li>
-  </ul>
-  <div class="nav-hamburger"><span></span><span></span><span></span></div>
-</nav>
+<div class="login-wrapper">
+  <div class="brand">
+    <div class="brand-icon">🌾</div>
+    <h1>Farmer's<span>Direct</span></h1>
+    <p>Farm-to-Consumer Agricultural Marketplace</p>
+  </div>
 
-<div class="login-container">
-  <div class="login-box reveal">
+  <div class="login-box">
     <h2>🔐 Secure Login</h2>
     <p class="subtitle">Sign in to access your dashboard</p>
 
@@ -78,19 +188,33 @@
       Consumer: <strong>priya@consumer.in</strong> / consumer123
     </div>
   </div>
+
+  <p class="footer-text">© 2025 Farmer's Direct · Jain University TD-PCL Project</p>
 </div>
 
 <script src="js/api.js"></script>
-<script src="js/main.js"></script>
 <script>
   let selectedRole = 'admin';
 
-  // Check if already logged in
+  // If already logged in, redirect to their dashboard
   if (Auth.isLoggedIn()) {
     const user = Auth.getUser();
     if (user.role === 'admin') window.location.href = 'admin.html';
     else if (user.role === 'farmer') window.location.href = 'farmer.html';
     else window.location.href = 'consumer.html';
+  }
+
+  // Read ?role= from URL (when coming from landing page buttons)
+  const urlParams = new URLSearchParams(window.location.search);
+  const presetRole = urlParams.get('role');
+  if (presetRole && ['admin', 'farmer', 'consumer'].includes(presetRole)) {
+    selectedRole = presetRole;
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.remove('active');
+      if (t.textContent.toLowerCase() === presetRole) t.classList.add('active');
+    });
+    const hints = { admin: 'admin@farmersdirect.in', farmer: 'ravi@farmer.in', consumer: 'priya@consumer.in' };
+    document.getElementById('email').value = hints[presetRole];
   }
 
   function setRole(role) {
@@ -141,4 +265,3 @@
 </script>
 </body>
 </html>
-

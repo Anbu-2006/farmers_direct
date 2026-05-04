@@ -106,22 +106,7 @@
 
 <div id="scroll-progress"></div>
 
-<nav class="navbar">
-  <a href="index.html" class="nav-logo">
-    <div class="nav-logo-icon">🌾</div>
-    <span class="nav-logo-text">Farmer's<span>Direct</span></span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="about.html" class="active">About</a></li>
-    <li><a href="farmer.html">For Farmers</a></li>
-    <li><a href="consumer.html">Marketplace</a></li>
-    <li><a href="ai-pricing.html">AI Pricing</a></li>
-    <li><a href="admin-login.html">Admin</a></li>
-    <li><a href="farmer.html" class="nav-cta">Join Now</a></li>
-  </ul>
-  <div class="nav-hamburger"><span></span><span></span><span></span></div>
-</nav>
+<nav class="navbar" id="dynamic-nav"></nav>
 
 <!-- PAGE HERO -->
 <div class="page-hero grain">
@@ -258,38 +243,12 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="nav-logo" style="margin-bottom:16px;">
-          <div class="nav-logo-icon">🌾</div>
-          <span class="nav-logo-text">Farmer's<span>Direct</span></span>
-        </div>
-        <p>A digital farm-to-consumer marketplace eliminating middlemen and empowering India's small farmers through technology.</p>
+        <div class="nav-logo" style="margin-bottom:16px;"><div class="nav-logo-icon">🌾</div><span class="nav-logo-text">Farmer's<span>Direct</span></span></div>
+        <p>India's premier farm-to-consumer digital marketplace. TD-PCL Project · Jain University · 2024–25</p>
       </div>
-      <div class="footer-col">
-        <h4>Platform</h4>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="consumer.html">Marketplace</a></li>
-          <li><a href="farmer.html">Farmer Portal</a></li>
-          <li><a href="admin-login.html">Admin Dashboard</a></li>
-          <li><a href="about.html">About</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Features</h4>
-        <ul>
-          <li><a href="#">Blockchain Trace</a></li>
-          <li><a href="#">AI Pricing</a></li>
-          <li><a href="#">Escrow Payments</a></li>
-          <li><a href="#">24hr Delivery</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Contact</h4>
-        <ul>
-          <li><a href="about.html">Team Page</a></li>
-          <li><a href="#">Jain University</a></li>
-        </ul>
-      </div>
+      <div class="footer-col"><h4>Platform</h4><ul><li><a href="about.html">About Us</a></li></ul></div>
+      <div class="footer-col"><h4>Technology</h4><ul><li><a href="#">Blockchain Traceability</a></li><li><a href="#">AI Market Analysis</a></li><li><a href="#">Escrow Payments</a></li></ul></div>
+      <div class="footer-col"><h4>Project Team</h4><ul><li><a href="about.html">G Ashika</a></li><li><a href="about.html">T Anbuselvan</a></li><li><a href="about.html">Dev Patel</a></li><li><a href="about.html">M. Vinayaga</a></li></ul></div>
     </div>
     <div class="footer-bottom">
       <p>© 2025 Farmer's Direct · <span>Jain University</span> TD-PCL Project</p>
@@ -299,5 +258,85 @@
 </footer>
 
 <script src="js/main.js"></script>
+
+<script src="js/api.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Shared pages require login
+    if (!Auth || !Auth.isLoggedIn()) {
+      alert('Please login to access this page.');
+      window.location.href = 'admin-login.html';
+      return;
+    }
+
+    const user = Auth.getUser();
+    const role = user.role;
+    let navLinks = '';
+    
+    if (role === 'admin') {
+      navLinks = `
+        <li><a href="admin.html">Dashboard</a></li>
+        <li><a href="ai-pricing.html">AI Pricing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li>
+          <a href="#" class="nav-cta" id="account-btn" onclick="event.preventDefault(); document.getElementById('account-dropdown').classList.toggle('show');">
+            🛡️ <span id="nav-username">Admin</span> ▾
+          </a>
+          <div id="account-dropdown" style="display:none;position:absolute;right:5%;top:60px;background:var(--white-off);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.3);padding:12px 0;min-width:180px;z-index:1000;">
+            <div style="padding:10px 20px;border-bottom:1px solid #eee;font-size:0.78rem;color:#999;">Logged in as <strong style="color:var(--gold-deep);">System Admin</strong></div>
+            <a href="#" onclick="Auth.clear();window.location.href='admin-login.html';" style="display:block;padding:10px 20px;color:var(--black);font-size:0.85rem;text-decoration:none;">🚪 Logout</a>
+          </div>
+        </li>
+      `;
+    } else if (role === 'farmer') {
+      navLinks = `
+        <li><a href="farmer.html">Dashboard</a></li>
+        <li><a href="ai-pricing.html">AI Pricing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li>
+          <a href="#" class="nav-cta" id="account-btn" onclick="event.preventDefault(); document.getElementById('account-dropdown').classList.toggle('show');">
+            👨‍🌾 <span id="nav-username">${user.name}</span> ▾
+          </a>
+          <div id="account-dropdown" style="display:none;position:absolute;right:5%;top:60px;background:var(--white-off);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.3);padding:12px 0;min-width:180px;z-index:1000;">
+            <div style="padding:10px 20px;border-bottom:1px solid #eee;font-size:0.78rem;color:#999;">Logged in as <strong style="color:var(--gold-deep);">Farmer</strong></div>
+            <a href="#" onclick="Auth.clear();window.location.href='admin-login.html';" style="display:block;padding:10px 20px;color:var(--black);font-size:0.85rem;text-decoration:none;">🚪 Logout</a>
+          </div>
+        </li>
+      `;
+    } else {
+      navLinks = `
+        <li><a href="consumer.html">Marketplace</a></li>
+        <li><a href="about.html">About</a></li>
+        <li>
+          <a href="#" class="nav-cta" id="account-btn" onclick="event.preventDefault(); document.getElementById('account-dropdown').classList.toggle('show');">
+            🛒 <span id="nav-username">${user.name}</span> ▾
+          </a>
+          <div id="account-dropdown" style="display:none;position:absolute;right:5%;top:60px;background:var(--white-off);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.3);padding:12px 0;min-width:180px;z-index:1000;">
+            <div style="padding:10px 20px;border-bottom:1px solid #eee;font-size:0.78rem;color:#999;">Logged in as <strong style="color:var(--gold-deep);">Consumer</strong></div>
+            <a href="#" onclick="Auth.clear();window.location.href='admin-login.html';" style="display:block;padding:10px 20px;color:var(--black);font-size:0.85rem;text-decoration:none;">🚪 Logout</a>
+          </div>
+        </li>
+      `;
+    }
+
+    const homeUrl = role === 'admin' ? 'admin.html' : role === 'farmer' ? 'farmer.html' : 'consumer.html';
+    
+    document.getElementById('dynamic-nav').innerHTML = `
+      <a href="${homeUrl}" class="nav-logo">
+        <div class="nav-logo-icon">🌾</div>
+        <span class="nav-logo-text">Farmer's<span>Direct</span></span>
+      </a>
+      <ul class="nav-links">${navLinks}</ul>
+    `;
+  });
+
+  document.addEventListener('click', function(e) {
+    const dd = document.getElementById('account-dropdown');
+    if (dd && !e.target.closest('#account-btn') && !e.target.closest('#account-dropdown')) {
+      dd.style.display = 'none';
+      dd.classList.remove('show');
+    }
+  });
+</script>
 </body>
 </html>

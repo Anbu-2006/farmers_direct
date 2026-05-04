@@ -147,27 +147,86 @@
       table td:before { position: absolute; top: 16px; left: 16px; width: 45%; padding-right: 10px; white-space: nowrap; font-weight: bold; font-size: 0.8rem; color: #777; content: attr(data-label); }
     }
   </style>
+
+<style>
+  .page-hero-dark {
+    background: linear-gradient(160deg, #080808, var(--black), #111);
+    color: var(--white-off);
+    padding: 80px 5% 60px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(202,184,79,0.15);
+  }
+  .page-hero-dark::before {
+    content: ''; position: absolute;
+    top:0; left:0; width: 100%; height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h40v40H0V0zm20 20h20v20H20V20z" fill="rgba(250,247,238,0.01)"/></svg>');
+    pointer-events: none;
+  }
+  .page-hero-dark h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 4vw, 3.5rem); margin-bottom: 16px; line-height: 1.1; letter-spacing:-0.02em; color: #ffffff; }
+  .page-hero-dark h1 span { color: var(--gold); }
+  .page-hero-dark p { color: rgba(250,247,238,0.6); max-width: 600px; line-height: 1.6; font-size: 1.05rem; }
+  .hero-stats { display: flex; gap: 32px; margin-top: 32px; }
+  .hero-stat-item h4 { color: var(--gold-deep); font-size: 1.5rem; font-weight: 900; margin-bottom:4px; font-family: var(--font-display); }
+  .hero-stat-item p { color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; }
+</style>
 </head>
 <body>
 
 <nav class="navbar">
-  <a href="index.html" class="nav-logo">
+  <a href="admin.html" class="nav-logo">
     <div class="nav-logo-icon">🌾</div>
     <span class="nav-logo-text">Farmer's<span>Direct</span></span>
   </a>
   <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
+    <li><a href="admin.html" class="active">Admin</a></li>
     <li><a href="about.html">About</a></li>
-    <li><a href="farmer.html">For Farmers</a></li>
-    <li><a href="consumer.html">Marketplace</a></li>
-    <li><a href="admin-login.html" class="active">Admin</a></li>
-    <li><a href="farmer.html" class="nav-cta">Join Now</a></li>
+    <li>
+      <a href="#" class="nav-cta" id="account-btn" onclick="event.preventDefault(); document.getElementById('account-dropdown').classList.toggle('show');">
+        🛡️ <span id="nav-username">Admin</span> ▾
+      </a>
+      <div id="account-dropdown" style="display:none;position:absolute;right:5%;top:60px;background:var(--white-off);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.3);padding:12px 0;min-width:180px;z-index:1000;">
+        <div style="padding:10px 20px;border-bottom:1px solid #eee;font-size:0.78rem;color:#999;">Logged in as <strong style="color:var(--gold-deep);">System Admin</strong></div>
+        <a href="#" onclick="Auth.clear();window.location.href='admin-login.html';" style="display:block;padding:10px 20px;color:var(--black);font-size:0.85rem;text-decoration:none;">🚪 Logout</a>
+      </div>
+    </li>
   </ul>
-  <div class="nav-hamburger"><span></span><span></span><span></span></div>
 </nav>
 
-<div class="prototype-banner">⚠️ System Administrator Dashboard — Secure Area</div>
+<script>
+  document.addEventListener('click', function(e) {
+    const dd = document.getElementById('account-dropdown');
+    if (dd && !e.target.closest('#account-btn') && !e.target.closest('#account-dropdown')) {
+      dd.style.display = 'none';
+      dd.classList.remove('show');
+    }
+  });
+  const origToggle = document.getElementById('account-btn');
+  if(origToggle) {
+    origToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      const dd = document.getElementById('account-dropdown');
+      if(dd) {
+        dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+        dd.classList.toggle('show');
+      }
+    });
+  }
+</script>
 
+
+<div class="page-hero-dark">
+  <div class="container" style="position:relative; z-index:2;">
+    <div style="display:inline-block; padding:4px 12px; border:1px solid rgba(202,184,79,0.3); border-radius:20px; font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:16px;">System Administration</div>
+    <h1>Admin <span>Dashboard</span></h1>
+    <p>Monitor platform activity, oversee order fulfillment, manage farmer verifications, and track escrow payments.</p>
+    <div class="hero-stats">
+      <div class="hero-stat-item"><h4>1,240+</h4><p>Active Farmers</p></div>
+      <div class="hero-stat-item"><h4>8,400+</h4><p>Orders Processed</p></div>
+      <div class="hero-stat-item"><h4>14</h4><p>Cities Active</p></div>
+    </div>
+  </div>
+</div>
 <div class="dashboard-layout">
 
   <!-- Sidebar -->
@@ -303,17 +362,32 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="nav-logo" style="margin-bottom:16px;"><div class="nav-logo-icon">🌾</div><span class="nav-logo-text">Farmer's<span>Direct</span></span></div>
-        <p>A digital farm-to-consumer marketplace. TD-PCL Project · Jain University · 2024–25</p>
+        <p>India's premier farm-to-consumer digital marketplace. Secure admin operations with full platform oversight.</p>
       </div>
-      <div class="footer-col"><h4>Platform</h4><ul><li><a href="index.html">Home</a></li><li><a href="consumer.html">Marketplace</a></li><li><a href="farmer.html">Farmer Portal</a></li><li><a href="admin-login.html">Admin Dashboard</a></li><li><a href="about.html">About</a></li></ul></div>
-      <div class="footer-col"><h4>Features</h4><ul><li><a href="#">Blockchain Trace</a></li><li><a href="#">AI Pricing</a></li><li><a href="#">Escrow Payments</a></li><li><a href="#">24hr Delivery</a></li></ul></div>
-      <div class="footer-col"><h4>Team</h4><ul><li><a href="about.html">G Ashika</a></li><li><a href="about.html">T Anbuselvan</a></li><li><a href="about.html">Dev Patel</a></li><li><a href="about.html">M. Vinayaga</a></li></ul></div>
+      <div class="footer-col"><h4>Administration</h4><ul><li><a href="admin.html">Dashboard</a></li><li><a href="about.html">About</a></li></ul></div>
+      <div class="footer-col"><h4>Platform</h4><ul><li><a href="#">Farmer Verification</a></li><li><a href="#">Order Management</a></li><li><a href="#">Escrow Oversight</a></li><li><a href="#">Dispute Resolution</a></li></ul></div>
+      <div class="footer-col"><h4>Project Team</h4><ul><li><a href="about.html">G Ashika</a></li><li><a href="about.html">T Anbuselvan</a></li><li><a href="about.html">Dev Patel</a></li><li><a href="about.html">M. Vinayaga</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Farmer's Direct · <span>Jain University</span> TD-PCL Project</p>
+      <p>Mentored by <span>Mr. Shine VJ</span> & <span>Mr. Himanshu Verma</span></p>
     </div>
   </div>
 </footer>
 
 <script src="js/main.js"></script>
 <script>
+  // Auth guard
+  if (!Auth.isLoggedIn() || !Auth.isRole('admin')) {
+    alert('Please login as admin to access this dashboard.');
+    window.location.href = 'admin-login.html';
+  }
+
+  // Update nav + sidebar with user info
+  const adminUser = Auth.getUser();
+  if (document.getElementById('nav-username')) document.getElementById('nav-username').textContent = adminUser.name;
+  if (document.querySelector('.admin-profile h3')) document.querySelector('.admin-profile h3').textContent = adminUser.name;
+
   function switchTab(tabId, el) {
     document.querySelectorAll('.dash-nav-item').forEach(n => n.classList.remove('active'));
     el.classList.add('active');

@@ -1,15 +1,14 @@
 {
-  "name": "backend",
+  "name": "farmers-direct-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Farmer's Direct — Full-Stack Agricultural Marketplace API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "seed": "node seed.js"
+    "seed": "node seed-data.js"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Jain University — TD-PCL 2024-25",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -20,7 +19,6 @@
     "express-rate-limit": "^8.4.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
-    "mongodb-memory-server": "^11.0.1",
     "mongoose": "^9.5.0",
     "morgan": "^1.10.1",
     "multer": "^2.1.1"

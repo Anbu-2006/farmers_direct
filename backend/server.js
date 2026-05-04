@@ -57,10 +57,10 @@ app.get('/api/stats', async (req, res) => {
   }
 });
 
-// Catch-all: serve frontend
+// Catch-all: serve login page as entry point
 app.get('{*path}', (req, res) => {
   if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, '..', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'admin-login.html'));
   }
 });
 
