@@ -22,7 +22,8 @@ const orderSchema = new mongoose.Schema({
     default: 'pending'
   },
 
-  // Payment simulation
+  // Payment
+  paymentMethod: { type: String, enum: ['online', 'cod'], default: 'cod' },
   paymentStatus: { type: String, enum: ['unpaid', 'paid', 'refunded', 'held'], default: 'unpaid' },
   paymentId:     { type: String, default: '' },
 

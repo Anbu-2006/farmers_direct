@@ -7,20 +7,25 @@ const router = express.Router();
 // POST /api/orders — Consumer: Place order
 router.post('/', auth, authorize('consumer'), async (req, res) => {
   try {
-    const { items, deliveryAddress, deliveryNotes } = req.body;
+    const { items, deliveryAddress, deliveryNotes, paymentMethod } = req.body;
     if (!items || !items.length) return res.status(400).json({ error: 'No items in order.' });
 
-    let totalAmount = 0;
-    const orderItems = [];
+    // Group items by farmer ID
+    const farmerGroups = {}; // { farmerId: { items: [], totalAmount: 0 } }
 
     for (const item of items) {
       const product = await Product.findById(item.productId).populate('farmer');
       if (!product || !product.isActive) continue;
 
-      const lineTotal = product.price * item.quantity;
-      totalAmount += lineTotal;
+      const farmerId = product.farmer._id.toString();
+      if (!farmerGroups[farmerId]) {
+        farmerGroups[farmerId] = { items: [], totalAmount: 0 };
+      }
 
-      orderItems.push({
+      const lineTotal = product.price * item.quantity;
+      farmerGroups[farmerId].totalAmount += lineTotal;
+
+      farmerGroups[farmerId].items.push({
         product: product._id,
         name: product.name,
         price: product.price,
@@ -38,26 +43,37 @@ router.post('/', auth, authorize('consumer'), async (req, res) => {
       await product.save();
     }
 
-    const platformFee = Math.round(totalAmount * 0.05);
-    const farmerPayout = totalAmount - platformFee;
+    const createdOrders = [];
+    const isOnline = paymentMethod === 'online';
 
-    // Generate simulated payment ID
-    const paymentId = 'PAY_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+    // Create an order for each farmer
+    for (const [farmerId, group] of Object.entries(farmerGroups)) {
+      const platformFee = Math.round(group.totalAmount * 0.05);
+      const farmerPayout = group.totalAmount - platformFee;
+      
+      const paymentId = isOnline ? 'PAY_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8) : '';
+      const paymentStatus = isOnline ? 'paid' : 'unpaid';
 
-    const order = await Order.create({
-      consumer: req.user._id,
-      farmer: orderItems[0]?.product ? (await Product.findById(orderItems[0].product)).farmer : null,
-      items: orderItems,
-      totalAmount,
-      platformFee,
-      farmerPayout,
-      deliveryAddress,
-      deliveryNotes,
-      paymentId,
-      paymentStatus: 'paid' // Simulated instant payment
+      const order = await Order.create({
+        consumer: req.user._id,
+        farmer: farmerId,
+        items: group.items,
+        totalAmount: group.totalAmount,
+        platformFee,
+        farmerPayout,
+        deliveryAddress,
+        deliveryNotes,
+        paymentMethod: paymentMethod || 'cod',
+        paymentId,
+        paymentStatus
+      });
+      createdOrders.push(order);
+    }
+
+    res.status(201).json({ 
+      orders: createdOrders, 
+      message: `Successfully placed ${createdOrders.length} order(s).` 
     });
-
-    res.status(201).json({ order, message: 'Order placed successfully! Payment simulated.' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

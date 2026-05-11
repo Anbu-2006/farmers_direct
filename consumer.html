@@ -299,15 +299,123 @@
     <div class="products-grid-2" id="market-grid">
       <!-- Populated by JS -->
     </div>
+<!-- MARKETPLACE -->
+<div class="marketplace-layout">
+
+  <!-- Sidebar -->
+  <aside class="filter-sidebar">
+    <div class="filter-box">
+      <h4>Category</h4>
+      <div class="filter-chip-group" id="cat-chips">
+        <span class="chip active" data-cat="All">All</span>
+        <span class="chip" data-cat="Vegetables">Vegetables</span>
+        <span class="chip" data-cat="Fruits">Fruits</span>
+        <span class="chip" data-cat="Greens">Greens</span>
+        <span class="chip" data-cat="Spices">Spices</span>
+        <span class="chip" data-cat="Poultry">Poultry</span>
+        <span class="chip" data-cat="Dairy">Dairy</span>
+      </div>
+    </div>
+
+    <div class="filter-box">
+      <h4>Price Range</h4>
+      <div class="filter-range">
+        <input type="range" min="0" max="500" value="500" id="price-range" />
+        <div class="range-labels">
+          <span>₹0</span>
+          <span id="price-val">Up to ₹500</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-box">
+      <h4>Freshness</h4>
+      <div class="filter-chip-group">
+        <span class="chip active">Today</span>
+        <span class="chip">Yesterday</span>
+        <span class="chip">2 Days</span>
+      </div>
+    </div>
+
+    <div class="filter-box">
+      <h4>Rating</h4>
+      <div class="filter-chip-group">
+        <span class="chip active">★ 4.5+</span>
+        <span class="chip">★ 4.0+</span>
+        <span class="chip">All</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Products -->
+  <main class="products-area">
+    <div class="products-toolbar">
+      <p class="product-count"><strong id="product-count">6</strong> products available near you</p>
+      <select class="sort-select" id="sort-select">
+        <option>Sort: Newest First</option>
+        <option>Price: Low to High</option>
+        <option>Price: High to Low</option>
+        <option>Rating: Highest</option>
+      </select>
+    </div>
+
+    <div class="products-grid-2" id="market-grid">
+      <!-- Populated by JS -->
+    </div>
 
     
   </main>
 </div>
 
 <!-- Cart Float -->
-<button class="cart-float" onclick="alert('Shopping cart coming in the full app!')">
+<button class="cart-float" onclick="openCheckoutModal()">
   🛒 View Cart <span class="cart-badge">0</span>
 </button>
+
+<!-- Checkout Modal -->
+<div id="checkout-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center;">
+  <div style="background:var(--white-off); padding:32px; border-radius:12px; width:90%; max-width:600px; max-height:90vh; overflow-y:auto; position:relative;">
+    <button onclick="closeCheckoutModal()" style="position:absolute; top:16px; right:24px; background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--black);">×</button>
+    <h2 style="font-family:var(--font-display); color:var(--black); margin-bottom:24px; border-bottom:2px solid var(--gold); padding-bottom:8px;">Complete Your Order</h2>
+    
+    <!-- Cart Items Review -->
+    <div style="margin-bottom:24px;">
+      <h4 style="font-size:0.9rem; color:var(--gold-deep); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Cart Summary</h4>
+      <div id="checkout-items-list" style="max-height:200px; overflow-y:auto; border:1px solid #eee; padding:12px; border-radius:8px; background:#fff;">
+        <!-- Populated by JS -->
+      </div>
+      <div style="text-align:right; margin-top:12px; font-size:1.1rem; font-weight:bold; color:var(--black);">
+        Total: <span id="checkout-total">₹0</span>
+      </div>
+    </div>
+
+    <!-- Delivery details -->
+    <div style="margin-bottom:24px;">
+      <h4 style="font-size:0.9rem; color:var(--gold-deep); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Delivery Address</h4>
+      <textarea id="checkout-address" placeholder="Enter your full address..." style="width:100%; padding:12px; border:1px solid var(--gray-warm); border-radius:var(--radius); font-family:var(--font-body); resize:vertical; min-height:80px;" required></textarea>
+    </div>
+
+    <!-- Payment Options -->
+    <div style="margin-bottom:24px;">
+      <h4 style="font-size:0.9rem; color:var(--gold-deep); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Payment Method</h4>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:12px; border:1px solid var(--gray-warm); border-radius:8px; background:#fff;">
+          <input type="radio" name="payment_method" value="online" checked style="accent-color:var(--gold-deep); width:18px; height:18px;" />
+          <span style="font-weight:bold; color:#333;">💳 Online Payment (UPI / Credit Card)</span>
+          <span style="margin-left:auto; font-size:0.8rem; color:#888;">Instant Confirmation</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:12px; border:1px solid var(--gray-warm); border-radius:8px; background:#fff;">
+          <input type="radio" name="payment_method" value="cod" style="accent-color:var(--gold-deep); width:18px; height:18px;" />
+          <span style="font-weight:bold; color:#333;">💵 Cash on Delivery (COD)</span>
+        </label>
+      </div>
+    </div>
+
+    <button id="btn-place-order" class="btn btn-primary" style="width:100%; padding:16px; font-size:1.1rem; border-radius:8px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="submitOrder()">
+      <span class="icon">📦</span> Confirm & Place Order
+    </button>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer>
@@ -389,6 +497,49 @@
       </div>
     `).join('');
 
+  let cartCount = 0;
+  let cartItems = [];
+  let allProducts = [];
+
+  async function loadProducts(params = {}) {
+    try {
+      const data = await ProductsAPI.getAll(params);
+      allProducts = data.products;
+      renderProducts(allProducts);
+    } catch (err) {
+      document.getElementById('market-grid').innerHTML = `<p style="color:#c0392b;">Failed to load products: ${err.message}</p>`;
+    }
+  }
+
+  function renderProducts(items) {
+    const grid = document.getElementById('market-grid');
+    document.getElementById('product-count').textContent = items.length;
+    grid.innerHTML = items.map(p => `
+      <div class="product-card reveal">
+        <div class="card-img">
+          <img src="${p.image || 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400'}" alt="${p.name}" loading="lazy"/>
+          <div class="card-badge"><span class="badge badge-fresh">${p.freshness}</span></div>
+        </div>
+        <div class="card-body">
+          <span class="badge badge-dark" style="font-size:0.68rem;margin-bottom:6px;">${p.category}</span>
+          <h3>${p.name}</h3>
+          <p class="farmer-name">👨‍🌾 ${p.farmer?.name || 'Unknown'} · ${p.farmer?.location || ''}</p>
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px;">
+            <span style="color:var(--gold-deep);font-size:0.82rem;">★ ${p.rating}</span>
+            <span style="color:#999;font-size:0.78rem;">${p.reviews} reviews</span>
+          </div>
+          <div style="margin-bottom:8px;">
+            <span class="badge" style="background:#eaf2ea;color:#2d6a2d;font-size:0.7rem;">🔗 Blockchain Verified</span>
+            ${p.aiSuggestedPrice ? `<span class="badge" style="background:rgba(202,184,79,0.15);color:var(--gold-deep);font-size:0.7rem;margin-left:4px;">🤖 AI: ₹${p.aiSuggestedPrice}</span>` : ''}
+          </div>
+          <div class="card-footer">
+            <span class="price">₹${p.price}/${p.unit}</span>
+            <button class="btn btn-primary btn-sm" onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.unit}',this)">+ Cart</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
     grid.querySelectorAll('.reveal').forEach(el => {
       new IntersectionObserver(e => { if(e[0].isIntersecting) e[0].target.classList.add('visible'); }, {threshold:0.1}).observe(el);
     });
@@ -403,19 +554,75 @@
     setTimeout(() => { btn.textContent = '+ Cart'; btn.style.background = ''; }, 2000);
   }
 
-  // Checkout
-  document.querySelector('.cart-float').addEventListener('click', async () => {
-    if (!Auth.isLoggedIn()) return alert('Please login as a consumer to place orders.\n\nGo to: Login page');
+  // Checkout Logic
+  function openCheckoutModal() {
+    if (!Auth.isLoggedIn()) {
+      alert('Please login as a consumer to place orders.\n\nGo to: Login page');
+      return window.location.href = 'admin-login.html';
+    }
     if (cartItems.length === 0) return alert('Your cart is empty!');
-    const addr = prompt('Enter delivery address:');
-    if (!addr) return;
+
+    const list = document.getElementById('checkout-items-list');
+    let html = '';
+    let total = 0;
+
+    cartItems.forEach(item => {
+      const lineTotal = item.price * item.quantity;
+      total += lineTotal;
+      html += `
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:8px 0; font-size:0.9rem;">
+          <span>${item.quantity}x ${item.name} (${item.unit})</span>
+          <strong>₹${lineTotal}</strong>
+        </div>
+      `;
+    });
+    list.innerHTML = html;
+    document.getElementById('checkout-total').textContent = `₹${total}`;
+    
+    document.getElementById('checkout-modal').style.display = 'flex';
+  }
+
+  function closeCheckoutModal() {
+    document.getElementById('checkout-modal').style.display = 'none';
+  }
+
+  async function submitOrder() {
+    const address = document.getElementById('checkout-address').value.trim();
+    if (!address) return alert('Please enter a delivery address.');
+
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    const btn = document.getElementById('btn-place-order');
+    btn.innerHTML = 'Processing...';
+    btn.disabled = true;
+
     try {
-      const result = await OrdersAPI.place({ items: cartItems, deliveryAddress: addr });
-      alert(`✅ Order placed!\n\nTotal: ₹${result.order.totalAmount}\nPayment ID: ${result.order.paymentId}\nStatus: ${result.order.status}`);
-      cartItems = []; cartCount = 0;
+      const payload = {
+        items: cartItems,
+        deliveryAddress: address,
+        paymentMethod: paymentMethod
+      };
+      
+      const result = await OrdersAPI.place(payload);
+      
+      let successMsg = `✅ Order placed successfully!\n\n`;
+      result.orders.forEach((o, i) => {
+        successMsg += `Order ${i+1}:\nTotal: ₹${o.totalAmount}\nStatus: ${o.paymentStatus.toUpperCase()}\nPayment ID: ${o.paymentId || 'N/A'}\n\n`;
+      });
+      alert(successMsg);
+      
+      // Clear cart
+      cartItems = []; 
+      cartCount = 0;
       document.querySelector('.cart-badge').textContent = '0';
-    } catch (err) { alert('Order failed: ' + err.message); }
-  });
+      closeCheckoutModal();
+      document.getElementById('checkout-address').value = '';
+    } catch (err) { 
+      alert('Order failed: ' + err.message); 
+    } finally {
+      btn.innerHTML = '<span class="icon">📦</span> Confirm & Place Order';
+      btn.disabled = false;
+    }
+  }
 
   // Filter by category
   document.querySelectorAll('#cat-chips .chip').forEach(chip => {
@@ -439,4 +646,3 @@
 </script>
 </body>
 </html>
-
